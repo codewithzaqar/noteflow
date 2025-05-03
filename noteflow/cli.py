@@ -7,7 +7,8 @@ def main():
 
     # Command to add a new journal entry
     add_parser = subparsers.add_parser("add", help="Add a new journal enyty")
-    add_parser.add_argument("text", help="The journal text")
+    add_parser.add_argument("text", help="The journal entry body")
+    add_parser.add_argument("-t", "--title", help="Optional title for the entry")
 
     # Command to list journal entries
     list_parser = subparsers.add_parser("list", help="List journal entries")
@@ -15,11 +16,13 @@ def main():
     args = parser.parse_args()
 
     if args.command == "add":
-        journal.add_entry(args.text)
+        journal.add_entry(args.text, title=args.title)
         print("Entry added.")
     elif args.command == "list":
         entries = journal.list_entries()
         for entry in entries:
+            print("=" * 40)
             print(entry.strip())
+            print("=" * 40)
     else:
         parser.print_help()
