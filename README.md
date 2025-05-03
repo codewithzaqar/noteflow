@@ -23,6 +23,17 @@ noteflow add "Had a productive day." -t "Daily Recap"
 
 # List all journal entries
 noteflow list
+
+# List today's entries only
+noteflow list --today
+
+# Search entries by keyword
+noteflow search "started"
+
+# Example Entry Format
+[2025-05-03 14:20:31]
+Title: NoteFlow
+Today I started writting in NoteFlow.
 ```
 
 Each entry will be printed with a timestamp, optional title, and the entry body, separated by lines for clarity.
