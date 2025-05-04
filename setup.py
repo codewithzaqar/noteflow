@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="NoteFlow",
-    version="0.04",
+    version="0.05",
     packages=find_packages(),
     entry_points={
         'console_scripts': [

@@ -7,8 +7,7 @@ NoteFlow is a simple CLI-based journal tool written in Python.
 Clone the repo and install locally:
 
 ```bash
-git clone
-https://github.com/codewithzaqar/noteflow.git
+git clone https://github.com/codewithzaqar/noteflow.git
 cd noteflow
 pip install .
 ```
@@ -45,6 +44,18 @@ noteflow view 2
 Title: NoteFlow
 Today I started writting in Noteflow.
 =======================================================
+
+# Delete Entry
+noteflow delete 2
+
+# Entry Format
+Entry '#2' deleted.
+
+# Export Entry
+noteflow export <filename.txt>
+
+# Entry Format
+Entries exported to filename.txt
 ```
 
 Each entry will be printed with a timestamp, optional title, and the entry body, separated by lines for clarity.
