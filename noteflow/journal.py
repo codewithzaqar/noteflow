@@ -1,13 +1,14 @@
-from datetime import datetime, date
 import os
+from datetime import datetime, date
 
-JOURNAL_FILE = os.path.expanduser("~/.noteflow.txt")
+DEFAULT_PATH = os.path.expanduser("~/.noteflow.txt")
+JOURNAL_FILE = os.getenv("NOTEFLOW_PATH", DEFAULT_PATH)
 
 def _parse_entries():
     if not os.path.exists(JOURNAL_FILE):
         return []
-    raw_entries = open(JOURNAL_FILE, "r").read().strip().split("\n\n")
-    return [(i + 1, entry.strip()) for i, entry in enumerate(raw_entries)]
+    raw = open(JOURNAL_FILE, "r").read().strip().split("\n\n")
+    return [(i + 1, e.strip()) for i, e in enumerate(raw)]
 
 def _save_entries(entries):
     with open(JOURNAL_FILE, "w") as f:
@@ -29,25 +30,23 @@ def search_entries(keyword):
     return [(i, e) for i, e in _parse_entries() if keyword.lower() in e.lower()]
 
 def today_entries():
-    today_str = date.today().strftime("%Y-%m-%d")
-    return [(i, e) for i, e in _parse_entries() if e.startswith(f"[{today_str}]")]
+    today = date.today().strftime("%Y-%m-%d")
+    return [(i, e) for i, e in _parse_entries() if e.startswith(f"[{today}]")]
 
 def get_entry_by_id(entry_id):
-    for i, entry in _parse_entries():
-        if i == entry_id:
-            return entry
-    return None
+    return next((e for i, e in _parse_entries() if i == entry_id), None)
 
 def delete_entry_by_id(entry_id):
     entries = _parse_entries()
-    updated = [entry for i, entry in entries if i != entry_id]
+    updated = [e for i, e in entries if i != entry_id]
     _save_entries(updated)
     return len(updated) < len(entries)
 
-def export_entries(filepath):
+def export_entries(filepath, fmt="txt"):
     entries = _parse_entries()
     with open(filepath, "w") as f:
-        for i, entry in entries:
-            f.write(f"# {i}\n" + "=" * 40 + "\n")
-            f.write(entry + "\n")
-            f.write("=" * 40 + "\n\n")
+        for i, e in entries:
+            if fmt == "md":
+                f.write(f"## Entry #{i}\n\n{e}\n\n---\n\n")
+            else:
+                f.write(f"# {i}\n{'='*40}\n{e}\n{'='*40}\n\n")

@@ -23,6 +23,7 @@ def main():
 
     export = subparsers.add_parser("export", help="Export all entries to a file")
     export.add_argument("filepath", help="Path to export file")
+    export.add_argument("--format", choices=["txt", "md"], default="txt", help="Export format")
 
     args = parser.parse_args()
 
@@ -62,8 +63,12 @@ def main():
             print("Entry not found.")
 
     elif args.command == "export":
-        journal.export_entries(args.filepath)
-        print(f"Entries exported to {args.filepath}")
+        journal.export_entries(args.filepath, fmt=args.format)
+        print(f"Entries exported to {args.filepath} ({args.format})")
 
     else:
         parser.print_help()
+
+    # On no command, show path
+    if not args.command:
+        print(f"Journal file: {journal.JOURNAL_FILE}")
