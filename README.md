@@ -34,6 +34,17 @@ noteflow search "started"
 [2025-05-03 14:20:31]
 Title: NoteFlow
 Today I started writting in NoteFlow.
+
+# View a specific entry
+noteflow view 2
+
+# Entry Format
+'#2'
+=======================================================
+[2025-05-04 14:20:31]
+Title: NoteFlow
+Today I started writting in Noteflow.
+=======================================================
 ```
 
 Each entry will be printed with a timestamp, optional title, and the entry body, separated by lines for clarity.

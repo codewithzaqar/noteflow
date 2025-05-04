@@ -18,6 +18,9 @@ def main():
     search_parser = subparsers.add_parser("search", help="Search entries by keyword")
     search_parser.add_argument("keyword", help="Keyword to search for")
 
+    view_parser = subparsers.add_parser("view", help="View an entry by ID")
+    view_parser.add_argument("id", type=int, help="ID of the entry to view")
+
     args = parser.parse_args()
 
     if args.command == "add":
@@ -26,19 +29,28 @@ def main():
 
     elif args.command == "list":
         entries = journal.today_entries() if args.today else journal.list_entries()
-        for entry in entries:
-            print("=" * 40)
-            print(entry.strip())
+        for i, entry in entries:
+            print(f"#{i}\n" + "=" * 40)
+            print(entry)
             print("=" * 40)
 
     elif args.command == "search":
         matches = journal.search_entries(args.keyword)
-        if matches:
-            for entry in matches:
-                print("=" * 40)
-                print(entry.strip())
-                print("=" * 40)
-        else:
+        for i, entry in matches:
+            print(f"#{i}\n" + "=" * 40)
+            print(entry)
+            print("=" * 40)
+        if not matches:
             print("No matching entries found.")
+
+    elif args.command == "view":
+        entry = journal.get_entry_by_id(args.id)
+        if entry:
+            print(f"# {args.id}\n" + "=" * 40)
+            print(entry)
+            print("=" * 40)
+        else:
+            print("Entry not found.")
+
     else:
         parser.print_help()
