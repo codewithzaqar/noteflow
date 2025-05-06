@@ -1,8 +1,8 @@
 import os
 from datetime import datetime, date
+from noteflow.config import get_journal_path
 
-DEFAULT_PATH = os.path.expanduser("~/.noteflow.txt")
-JOURNAL_FILE = os.getenv("NOTEFLOW_PATH", DEFAULT_PATH)
+JOURNAL_FILE = get_journal_path()
 
 def _parse_entries():
     if not os.path.exists(JOURNAL_FILE):
@@ -41,12 +41,3 @@ def delete_entry_by_id(entry_id):
     updated = [e for i, e in entries if i != entry_id]
     _save_entries(updated)
     return len(updated) < len(entries)
-
-def export_entries(filepath, fmt="txt"):
-    entries = _parse_entries()
-    with open(filepath, "w") as f:
-        for i, e in entries:
-            if fmt == "md":
-                f.write(f"## Entry #{i}\n\n{e}\n\n---\n\n")
-            else:
-                f.write(f"# {i}\n{'='*40}\n{e}\n{'='*40}\n\n")
