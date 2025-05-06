@@ -17,6 +17,15 @@ def main():
     view_parser = subparsers.add_parser("view", help="View a specific note")
     view_parser.add_argument("note_id", type=int, help="Note ID to view")
 
+    # Edit note command
+    edit_parser = subparsers.add_parser("edit", help="Edit an existing note")
+    edit_parser.add_argument("note_id", type=int, help="Note ID to edit")
+    edit_parser.add_argument("content", help="New note content")
+
+    # Delete note command
+    delete_parser = subparsers.add_parser("delete", help="Delete a note")
+    delete_parser.add_argument("note_id", type=int, help="Note ID to delete")
+
     args = parser.parse_args()
 
     noteflow = Noteflow()
@@ -32,6 +41,19 @@ def main():
         note = noteflow.get_note(args.note_id)
         if note:
             print(f"ID: {note['id']}\nDate: {note['date']}\nContent: {note['content']}")
+        else:
+            print(f"Note {args.note_id} not found")
+    elif args.command == "edit":
+        if not args.content.strip():
+            print("Error: Note content cannot be empty")
+            sys.exit(1)
+        if noteflow.edit_note(args.note_id, args.content):
+            print("Note edited successfully")
+        else:
+            print(f"Note {args.note_id} not found")
+    elif args.command == "delete":
+        if noteflow.delete_note(args.note_id):
+            print("Note deleted successfully")
         else:
             print(f"Note {args.note_id} not found")
     else:

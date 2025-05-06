@@ -34,3 +34,20 @@ class Noteflow:
             if note["id"] == note_id:
                 return note
         return None
+    
+    def edit_note(self, note_id, content):
+        for note in self.notes:
+            if note["id"] == note_id:
+                note["content"] = content
+                note["date"] = datetime.now().isoformat()
+                self._save_notes()
+                return True
+        return False
+    
+    def delete_note(self, note_id):
+        for i, note in enumerate(self.notes):
+            if note["id"] == note_id:
+                self.notes.pop(i)
+                self._save_notes()
+                return True
+        return False
