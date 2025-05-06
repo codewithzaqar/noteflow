@@ -23,5 +23,19 @@ noteflow list
 
 # View a specific note
 noteflow view 1
+
+# Edit an existing note
+noteflow edit 1 "Updated note content"
+
+# Delete a note
+noteflow delete 1
 ```
 
+## Development
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run tests
+python -m unittest discover tests
+```
