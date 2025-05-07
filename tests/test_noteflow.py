@@ -1,6 +1,7 @@
 import unittest
-import json
 import os
+import json
+from datetime import datetime, timedelta
 from noteflow.noteflow import Noteflow, NoteflowError
 
 class TestNoteflow(unittest.TestCase):
@@ -11,6 +12,8 @@ class TestNoteflow(unittest.TestCase):
     def tearDown(self):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
+        if os.path.exists("logs/noteflow.log"):
+            os.remove("logs/noteflow.log")
 
     def test_add_note(self):
         self.noteflow.add_note("Test note", ["work"])
@@ -62,19 +65,48 @@ class TestNoteflow(unittest.TestCase):
             self.noteflow.edit_note(1, "")
 
     def test_backward_compatibility(self):
-        # Simulate an old note without tags
         old_note = {"id": 1, "date": "2025-05-06T12:00:00", "content": "Old note"}
         with open(self.test_file, "w") as f:
             json.dump([old_note], f)
-        # Reload notes
         self.noteflow = Noteflow(self.test_file)
         notes = self.noteflow.list_notes()
         self.assertEqual(len(notes), 1)
         self.assertEqual(notes[0]["tags"], [])
-        # Test search with old note
         results = self.noteflow.search_notes("old")
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]["content"], "Old note")
+
+    def test_date_filtering(self):
+        now = datetime.now()
+        yesterday = (now - timedelta(days=1)).isoformat()
+        today = now.isoformat()
+        self.noteflow.add_note("Yesterday's note", tags=["test"], date=yesterday)
+        self.noteflow.add_note("Today's note", tags=["test"], date=today)
+        notes = self.noteflow.list_notes(start_date=now.strftime("%Y-%m-%d"))
+        self.assertEqual(len(notes), 1)
+        self.assertEqual(notes[0]["content"], "Today's note")
+        notes = self.noteflow.list_notes(end_date=(now - timedelta(days=2)).strftime("%Y-%m-%d"))
+        self.assertEqual(len(notes), 0)
+
+    def test_search_with_date_filter(self):
+        now = datetime.now()
+        yesterday = (now - timedelta(days=1)).isoformat()
+        today = now.isoformat()
+        self.noteflow.add_note("Work note", tags=["work"], date=yesterday)
+        self.noteflow.add_note("Another work note", tags=["work"], date=today)
+        results = self.noteflow.search_notes("work", start_date=now.strftime("%Y-%m-%d"))
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]["content"], "Another work note")
+
+    def test_tag_validation(self):
+        self.noteflow.add_note("Valid note", ["work", "personal"])
+        note = self.noteflow.get_note(1)
+        self.assertEqual(note["tags"], ["work", "personal"])
+        with self.assertRaises(NoteflowError):
+            self.noteflow.add_note("Invalid note", ["", "  "])
+        self.noteflow.edit_note(1, "Edited note", ["valid"])
+        note = self.noteflow.get_note(1)
+        self.assertEqual(note["tags"], ["valid"])
 
 if __name__ == "__main__":
     unittest.main()

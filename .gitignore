@@ -12,6 +12,7 @@ dist/
 *.log
 .noteflow.txt
 noteflow.json
+logs/
 
 # Virtual environments
 venv/
