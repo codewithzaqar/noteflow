@@ -13,56 +13,14 @@ pip install .
 ```
 
 ## Usage
+ 
+Coming Soon in Docs
 
+## Development
 ```bash
-# Add a new journal entry
-noteflow add "Today I started writting in NoteFlow." --title "NoteFlow"
+# Install dependencies
+pip install -r requirements.txt
 
-noteflow add "Had a productive day." -t "Daily Recap"
-
-# List all journal entries
-noteflow list
-
-# List today's entries only
-noteflow list --today
-
-# Search entries by keyword
-noteflow search "started"
-
-# Example Entry Format
-[2025-05-03 14:20:31]
-Title: NoteFlow
-Today I started writting in NoteFlow.
-
-# View a specific entry
-noteflow view 2
-
-# Entry Format
-'#2'
-=======================================================
-[2025-05-04 14:20:31]
-Title: NoteFlow
-Today I started writting in Noteflow.
-=======================================================
-
-# Delete Entry
-noteflow delete 2
-
-# Entry Format
-Entry '#2' deleted.
-
-# Export Entry
-noteflow export <filename.txt>
-
-# Entry Format
-Entries exported to filename.txt
-```
-
-Each entry will be printed with a timestamp, optional title, and the entry body, separated by lines for clarity.
-
-## Storage
-
-All entries are saved in a plain text file at:
-```
-~/.noteflow.txt
+# Run tests
+python -m unittest discover tests
 ```

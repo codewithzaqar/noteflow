@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="NoteFlow",
-    version="0.07",
+    version="0.13",
     packages=find_packages(),
+    install_requires=[],
     entry_points={
         'console_scripts': [
             'noteflow=noteflow.cli:main',

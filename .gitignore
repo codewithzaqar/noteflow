@@ -11,6 +11,8 @@ dist/
 # Logs and local files
 *.log
 .noteflow.txt
+noteflow.json
+logs/
 
 # Virtual environments
 venv/
